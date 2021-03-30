@@ -67,7 +67,7 @@
         <el-form-item
         type="date"
         prop="email"
-        label="创建时间"
+        label="创建 时间"
       >
         <el-input v-model="time"></el-input>
       </el-form-item>
