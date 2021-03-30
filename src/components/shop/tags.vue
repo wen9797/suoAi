@@ -18,7 +18,7 @@
         <el-table-column prop="tags_name" label="标签名字" width="180"></el-table-column>
         <el-table-column prop="create_time" label="创建时间" width="180"></el-table-column>
         <el-table-column prop="update_time" label="更新时间" width="180"></el-table-column>
-        <el-table-column prop="sort" label="种类" width="180"></el-table-column>
+        <el-table-column prop="sort" label="排序" width="180"></el-table-column>
         <el-table-column prop="description" label="操作" width="180px">
           <template slot-scope="scope">
             <el-button type="warning" @click="openTages('edit',scope.row)" size="mini">编辑</el-button>
@@ -38,27 +38,20 @@
         </el-pagination>
       </div>
     </el-card>
-    <el-dialog title="添加管理员" :visible.sync="addTages" width="400px">
+    <el-dialog title="添加标签" :visible.sync="addTages" width="400px">
       <div class="from-list">
-        <div class="from-title">标签名字：</div>
+        <div class="from-title">标签名字:</div>
         <div class="from-input">
-          <el-input size="small" placeholder="标签名字" v-model="tags_names"></el-input>
+          <el-input size="small" placeholder="" v-model="tags_names"></el-input>
         </div>
       </div>
-
       <div class="from-list">
-        <div class="from-title">创建时间:</div>
+        <div class="from-title">排序:</div>
         <div class="from-input">
-          <el-input size="small" placeholder="创建时间" v-model="tags_create_time"></el-input>
+          <el-input size="small" placeholder="" v-model="sort"></el-input>
         </div>
       </div>
-      
-      <div class="from-list">
-        <div class="from-title">更新时间：</div>
-        <div class="from-input">
-          <el-input size="small" placeholder="更新时间" v-model="tags_update_time"></el-input>
-        </div>
-      </div>
+ 
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="addTages = false">取 消</el-button>
         <el-button size="small" type="primary" @click="add_edit()">确 定</el-button>
@@ -75,10 +68,11 @@
         tableData: [],
         addTages: false,
         userInfoDialog:false,
-        id:'',
+        
         tags_names:'',
-        tags_create_time:'',
-        tags_update_time:'',
+        sort:'',
+        id:'',
+        
         // 默认每页显示的页数（可修改）
         PageSize: 10,
         //默认显示几页
@@ -101,13 +95,12 @@
        openTages(type,data) {
         if(type == 'add') {
           this.tags_names = '';
-          this.tags_create_time = '';
-          this.tags_update_time ='';
+          this.sort = '';
         }else if(type == 'edit'){
           console.log(data)
           this.tags_names = data.tags_name;
-          this.tags_create_time = data.create_time;
-          this.tags_update_time = data.update_time;
+          
+          this.sort = data.sort;
           this.id = data.id;
         }
         this.fromStatus = type
@@ -132,20 +125,24 @@
         var _this = this
         this.userInfoDialog = true
         this.$http.post(this.publicurl + '/admin/Tags/'+this.fromStatus, {
-          'id': this.id,
-          'name': this.tags_names,
-          'create': this.tags_create_time,
-          'update': this.tags_update_time
+          
+          name: this.tags_names,
+          sort:this.sort,
+          id:this.id
+          
         })
         .then(function (res) {
           _this.$VerificationLogin(res)
-          // if(res.data.code == 1){
-          //     _this.$message({
-          //       message: res.data.msg,
-          //       type: 'success'
-          //     });
-          //     console.log(ds)
-          // }
+           if(res.data.code == 1){
+             
+             _this.addTages = false
+             _this.getList(_this.PageSize, _this.currentPage)
+               _this.$message({
+                message: res.data.msg,
+                 type: 'success'
+              });
+               console.log(ds)
+           }
         })
       },
 

@@ -407,7 +407,7 @@
       </el-main>
     </el-container>
     <div v-show="NewWindow" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
-      <el-button size="small" @click="">新窗口打开</el-button>
+      <el-button size="small">新窗口打开</el-button>
     </div>
   </div>
 </template>
